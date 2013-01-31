@@ -96,5 +96,3 @@ function Get-NetworkStatistics
 }
 
 Export-ModuleMember Get-NetworkStatistics
-Window size: x 
-Viewport size: x

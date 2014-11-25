@@ -21,4 +21,3 @@ function Get-PSOwner
 	}
 }
 
-Export-ModuleMember Get-PSOwner

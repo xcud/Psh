@@ -95,4 +95,3 @@ function Get-NetworkStatistics
     } 
 }
 
-Export-ModuleMember Get-NetworkStatistics

@@ -22,6 +22,7 @@ function Test-Image {
             gif = @( "47", "49", "46" );
             tif = @( "49", "49", "2A" );
             png = @( "89", "50", "4E", "47", "0D", "0A", "1A", "0A" );
+            pdf = @( "25", "50", "44", "46" );
         }
 
         $bytes = Get-Content $path -Encoding Byte -ReadCount 1 -TotalCount 8 -ErrorAction 0

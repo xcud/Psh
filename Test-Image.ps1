@@ -12,7 +12,8 @@ function Test-Image {
     [CmdletBinding()]
     param(
         [parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)] 
-        $Path
+        [Alias('PSPath')]
+        [string] $Path
     )
 
     PROCESS {
@@ -25,20 +26,19 @@ function Test-Image {
             pdf = @( "25", "50", "44", "46" );
         }
 
-        $bytes = Get-Content $path -Encoding Byte -ReadCount 1 -TotalCount 8 -ErrorAction 0
+        $bytes = Get-Content -LiteralPath $path -Encoding Byte -ReadCount 1 -TotalCount 8 -ErrorAction Ignore
 
         $retval = $false
         foreach($key in $knownImageHeaders.Keys) {
-            $knownHeaderArray = $knownImageHeaders[$key]
 
-            # transform into array of the same length and format as what we're comparing against
-            $byteArray = ($bytes | select -first $knownHeaderArray.Length | % { $_.ToString("X2") }) 
-            if($byteArray -eq $null) {
+            # transform into array of the same length and format as the reference array
+            $byteArray = $bytes | select -first $knownImageHeaders[$key].Length | % { $_.ToString("X2") }
+            if($byteArray.Length -eq 0) {
                 continue
             }
 
             # compare the two arrays
-            $diff = Compare-Object -ReferenceObject $knownHeaderArray -DifferenceObject $byteArray
+            $diff = Compare-Object -ReferenceObject $knownImageHeaders[$key] -DifferenceObject $byteArray
             if(($diff | Measure-Object).Count -eq 0) {
                 $retval = $true
             }

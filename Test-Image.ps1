@@ -10,8 +10,10 @@
 #>
 function Test-Image {
     [CmdletBinding()]
+    [OutputType([System.Boolean])]
     param(
-        [parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)] 
+        [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)] 
+        [ValidateNotNullOrEmpty()]
         [Alias('PSPath')]
         [string] $Path
     )
@@ -32,7 +34,7 @@ function Test-Image {
         foreach($key in $knownImageHeaders.Keys) {
 
             # transform into array of the same length and format as the reference array
-            $byteArray = $bytes | select -first $knownImageHeaders[$key].Length | % { $_.ToString("X2") }
+            $byteArray = $bytes | Select-Object -First $knownImageHeaders[$key].Length | ForEach-Object { $_.ToString("X2") }
             if($byteArray.Length -eq 0) {
                 continue
             }
@@ -49,10 +51,14 @@ function Test-Image {
 }
 
 function Get-ChildImage {
- [CmdletBinding()]
+    [CmdletBinding()]
+    [OutputType([System.IO.FileInfo])]
     param(
-        [parameter(Mandatory=$false, Position=0, ValueFromPipeline=$true)] $Path
+        [parameter(Mandatory=$false, Position=0, ValueFromPipeline=$true)]
+        [ValidateNotNullOrEmpty()]
+        [Alias('PSPath')]
+        [string] $Path
     )
 
-    Get-ChildItem $Path | ? { Test-Image $_.FullName }
+    Get-ChildItem $Path -File | Where-Object { Test-Image $_.FullName }
 }

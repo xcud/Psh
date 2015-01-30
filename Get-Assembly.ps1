@@ -1,10 +1,10 @@
 <#
 .Synopsis
-        Gets a list of the assemblies loaded into memory in the current AppDomain.
+        Gets one or more assemblies loaded into memory in the current AppDomain.
 .Example
-        PS> Get-Assemblies powershell
+        PS> Get-Assembly powershell
 #>
-function Get-Assemblies() {
+function Get-Assembly() {
   param($Match, [Switch]$NamesOnly);
 	
 	$matchingAsms = [Threading.Thread]::GetDomain().GetAssemblies() | ? {$_.Location -match $Match }
@@ -16,4 +16,4 @@ function Get-Assemblies() {
 		$matchingAsms
 	}
 }
-set-alias asm Get-Assemblies
+set-alias asm Get-Assembly
